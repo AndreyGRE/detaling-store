@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import ProductList from './components/ProductList';
-import ToggleDarkMode from './components/ToggleDarkMode';
+import SerchSort from './components/SerchSort'
 
 function App() {
     const [cart, setCart] = useState([]);
@@ -78,9 +78,8 @@ function App() {
     
 
     return (
-        <div className='p-5 '>
-            <h1 className=' bg-red-500 dark:bg-amber-400'>bvz</h1>
-            <ToggleDarkMode/>
+        <div className=''>
+            <SerchSort/>
             <ProductList products={products} addToCart={addToCart} />
 
             {/* <Cart cart={cart} removeFromCart={removeFromCart} /> */}

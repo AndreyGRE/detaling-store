@@ -9,10 +9,10 @@ db.serialize(() => {
       name TEXT,
       price REAL,
       stock INTEGER,
-      category TEXT
+      category TEXT,
+      imageUrl TEXT DEFAULT 'https://e7.pngegg.com/pngimages/235/373/png-clipart-tread-car-alloy-wheel-rim-tire-car-car-transport.png'
     )
   `);
-
   db.run(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY,
