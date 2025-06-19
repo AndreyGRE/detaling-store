@@ -78,8 +78,7 @@ function App() {
 
     return (
         <div className='p-5 '>
-            <h1 className='bg-red-300'>bvz</h1>
-             <ThemeToggle />
+            <h1 className=''>bvz</h1>
             <ProductList products={products} addToCart={addToCart} />
 
             {/* <Cart cart={cart} removeFromCart={removeFromCart} /> */}
