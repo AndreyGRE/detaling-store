@@ -1,67 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import ProductList from './components/ProductList';
-import Cart from './components/Cart';
-import Checkout from './components/Checkout';
 
 function App() {
-const [cart, setCart] = useState([]);
-const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [products, setProducts] = useState([]);
 
-const fetchProducts = async () => {
-    const res = await axios.get('http://localhost:5000/api/products');
-    setProducts(res.data);
-};
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/products', {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }  
+        };
+        fetchProducts();
+    }, []);
+    
+    const addToCart = (product) => {
+        setCart((prev) => {
+        const itemInCart = prev.find((p) => p.id === product.id);
+        if (itemInCart) {
+            return prev.map((p) =>
+            p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+            );
+        } else {
+            return [...prev, { ...product, quantity: 1 }];
+        }
+        });
+    };
 
-const addToCart = (product) => {
-    setCart((prev) => {
-    const itemInCart = prev.find((p) => p.id === product.id);
-    if (itemInCart) {
-        return prev.map((p) =>
-        p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
-        );
-    } else {
-        return [...prev, { ...product, quantity: 1 }];
-    }
-    });
-};
+    // const removeFromCart = (id) => {
+    //     setCart((prev) => prev.filter((p) => p.id !== id));
+    // };
 
-const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((p) => p.id !== id));
-};
+    // const placeOrder = async (userId) => {
+    //     for (const item of cart) {
+    //         try {
+    //             const response = await fetch('http://localhost:5000/api/orders/place', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                 'Content-Type': 'application/json',
+    //                 },
+    //                 body: JSON.stringify({
+    //                 productId: item.id,
+    //                 quantity: item.quantity,
+    //                 userId,
+    //                 }),
+    //             });
 
-const placeOrder = async (userId) => {
-    for (const item of cart) {
-    await axios.post('http://localhost:5000/api/orders/place', {
-        productId: item.id,
-        quantity: item.quantity,
-        userId,
-    });
-    }
-    setCart([]);
-    alert('Заказ оформлен!');
-};
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! status: ${response.status}`);
+    //             }
 
-useEffect(() => {
-    fetchProducts();
-}, []);
+    //             const data = await response.json();
+    //             console.log(data); // Обработка ответа от сервера
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //         }
+    //     }
 
-return (
-    <div style={{ padding: 20 }}>
-    <h1>Автодетейлинг Магазин</h1>
+    //     setCart([]);
+    //     alert('Заказ оформлен!');
+    // };
 
-    <ProductList products={products} addToCart={addToCart} />
+    
 
-    <hr />
+    return (
+        <div className='p-5 '>
+            <h1 className='bg-red-300'>bvz</h1>
+             <ThemeToggle />
+            <ProductList products={products} addToCart={addToCart} />
 
-    <Cart cart={cart} removeFromCart={removeFromCart} />
-
-    <hr />
-
-    <Checkout cart={cart} onPlaceOrder={placeOrder} />
-    </div>
-);
+            {/* <Cart cart={cart} removeFromCart={removeFromCart} /> */}
+            {/* <Checkout cart={cart} onPlaceOrder={placeOrder} /> */}
+        </div>
+    );
 }
 
 export default App;
