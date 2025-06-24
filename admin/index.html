@@ -1,0 +1,39 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Управление товарами</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    input, button, textarea { width: 100%; margin: 5px 0; padding: 8px; box-sizing: border-box; }
+    .form-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .form-group > div { flex: 1; min-width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Товары</h1>
+
+  <div class="form-group">
+    <input type="text" id="name" placeholder="Название">
+    <input type="number" id="price" placeholder="Цена">
+    <input type="number" id="stock" placeholder="Остаток">
+    <input type="text" id="category" placeholder="Категория">
+    <input type="text" id="imageUrl" placeholder="URL изображения">
+    <button onclick="addProduct()">Добавить</button>
+  </div>
+
+  <table id="productsTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>Название</th><th>Цена</th><th>Остаток</th><th>Категория</th><th>Изображение</th><th>Действия</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="main.js"></script>
+</body>
+</html>

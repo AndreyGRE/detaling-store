@@ -1,12 +1,13 @@
-// src/components/Modal.jsx
-import { useEffect } from "react";
+
+import React, { useEffect } from "react";
 import useCartStore from "../store/useCartStore";
+import CartItem from "./CartItem";
 
 export default function Modal({ isOpen, onClose }) {
-    const { cart, clearCart, removeFromCart } = useCartStore();
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    console.log(cart)
+    const { cart, clearCart } = useCartStore();
 
+    // Подсчёт общей суммы
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === "Escape") {
@@ -29,57 +30,60 @@ export default function Modal({ isOpen, onClose }) {
         };
     }, [isOpen]);
 
-    // Не рендерим, если не открыт
     if (!isOpen) return null;
 
     return (
-        <div className=" fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black opacity-50"></div>
-            <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl p-6 mx-4 max-h-[90vh] overflow-y-auto flex flex-col">
-                <div class="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
-                    <h2 class="font-semibold text-3xl text-black">Корзина</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center ">
+            <div
+                className="absolute inset-0 bg-black opacity-50"
+                onClick={onClose}
+            ></div>
+            <div className="relative w-full max-w-2xl  bg-zinc-50 rounded-2xl shadow-xl p-6 mx-4 max-h-[90vh] overflow-y-auto flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
+                    <h2 className="font-semibold text-3xl text-black">Корзина</h2>
                     <button
-                        className="text-black text-5xl hover:text-shadow-lg "
-                        id="closeCart"
+                        className="text-black text-5xl hover:text-gray-700"
                         aria-label="Close cart"
-                        onClick={() => onClose()}
+                        onClick={onClose}
                     >
                         &times;
                     </button>
                 </div>
 
+                {/* Cart Items */}
                 <div
                     id="cartItems"
-                    class="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-800 text-black text-xl my-3 font-semibold" 
+                    className="flex-1 overflow-y-auto divide-y divide-zinc-200 dark:divide-zinc-800 my-3"
                 >
-                    {console.log(cart)}
-                    {cart.length > 0
-                        ? cart.map((item) => {
-                              return (
-                                 <>
-                                    <div>{item.name}</div>
-                                    <div>{item.quantity}</div>
-                                </>
-                              )
-                             
-                          })
-                        : <div className="">В корзине пусто(...</div>}
-
+                    {cart.length > 0 ? (
+                        cart.map((item) => <CartItem key={item.id} item={item} />)
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            В корзине пусто...
+                        </div>
+                    )}
                 </div>
-                {cart.length > 0? <button onClick={()=> clearCart()}  className=" self-end max-w-76 mb-3 w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-medium tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-500">Очистить корзину</button> : ''}
-                
 
-                <div class="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-center flex-col">
-                    <div class="flex items-center justify-end mb-4 text-black gap-3 font-semibold">
+                {/* Clear Cart Button */}
+                {cart.length > 0 && (
+                    <button
+                        onClick={clearCart}
+                        className="self-end max-w-76 mb-3 w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-medium tracking-tight transition-transform duration-100 transform active:-translate-y-1"
+                    >
+                        Очистить корзину
+                    </button>
+                )}
+
+                {/* Footer with Total and Checkout */}
+                <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col">
+                    <div className="flex items-center justify-end mb-4 text-black gap-3 font-semibold">
                         <span className="text-2xl">Итог:</span>
-                        <span
-                            id="cartTotal"
-                            class="text-teal-600 dark:text-teal-400 font-semibold text-2xl"
-                        >
-                            ₽ 0
+                        <span className="text-teal-600 font-semibold text-2xl">
+                            ₽ {total.toFixed(0)}
                         </span>
                     </div>
-                    <button class=" self-center max-w-96 w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-medium tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-500">
+                    <button className="self-center max-w-96 w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md font-medium tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-500 transition-transform duration-100 transform active:-translate-y-1">
                         Оформить заказ
                     </button>
                 </div>

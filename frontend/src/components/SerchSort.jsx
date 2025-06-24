@@ -3,7 +3,13 @@ import ToggleDarkMode from "./ToggleDarkMode";
 import useShoppingCartIsOpen from "../store/useShoppingCartIsOpen";
 import useSearchProd from "../store/useSearchProd";
 
+import useCartStore from "../store/useCartStore";
+
 const SerchSort = () => {
+    const cart = useCartStore((state) => state.cart);
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const displayCount = totalItems > 9 ? "9+" : totalItems;
+
     const { setSearchProd } = useSearchProd();
     const { toggleCart } = useShoppingCartIsOpen();
     const [categories, setCategories] = useState(["Все"]);
@@ -118,7 +124,7 @@ const SerchSort = () => {
 
     return (
         <>
-            <div className="bg-white sticky top-0 z-100">
+            <div className="bg-white sticky top-0 z-100  dark:bg-zinc-100 ">
                 <div className=" flex p-4 items-center gap-6 max-w-7xl mx-auto">
                     <div href="#" className="flex gap-2 cursor-pointer">
                         <svg
@@ -189,7 +195,7 @@ const SerchSort = () => {
                             DTL Store
                         </div>
                     </div>
-                    <div className="flex-1 flex gap-3 p-2 text-black bg-zinc-100/70 rounded-2xl overflow-hidden">
+                    <div className="flex-1 flex gap-3 p-2 text-black bg-zinc-100/70 dark:bg-zinc-300 rounded-2xl overflow-hidden">
                         <div>
                             <svg
                                 className="w-5 rotate-90"
@@ -219,7 +225,7 @@ const SerchSort = () => {
                     </div>
                     <ToggleDarkMode />
                     <div
-                        className="hover:scale-110"
+                        className="relative hover:scale-110"
                         onClick={() => toggleCart()}
                     >
                         <svg
@@ -244,11 +250,17 @@ const SerchSort = () => {
                                 stroke-width="1.5"
                                 stroke-linecap="round"
                             />
+                            {/* Счетчик */}
                         </svg>
+                            {totalItems > 0 && (
+                                <div className="absolute -top-1 -right-1 bg-teal-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {displayCount}
+                                </div>
+                            )}
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row flex-wrap  erflow-x-auto gap-2 hide-scrollbar fade-up max-w-7xl mx-auto mt-4">
+            <div className="flex flex-row flex-wrap  erflow-x-auto gap-2 hide-scrollbar fade-up max-w-7xl mx-auto mt-4  ">
                 {categories.map((item, index) => {
                     const isSelected = serchData.categor.includes(item);
                     return (
